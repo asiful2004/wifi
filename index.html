@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra WiFi - বাংলাদেশের সেরা হাই-স্পিড ওয়াইফাই</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3197/3197975.png">
+</head>
+<body data-theme="light">
+    <!-- Header Section -->
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <i class="fas fa-wifi"></i>
+                    <span data-i18n="site_name">আল্ট্রা ওয়াইফাই</span>
+                </div>
+                
+                <div class="switchers">
+                    <!-- Language Switcher -->
+                    <div class="lang-switcher">
+                        <button id="langBn" class="active lang-btn">
+                            <img src="https://flagcdn.com/w20/bd.png" alt="Bangla" class="flag">
+                            বাংলা
+                        </button>
+                        <button id="langEn" class="lang-btn">
+                            <img src="https://flagcdn.com/w20/gb.png" alt="English" class="flag">
+                            English
+                        </button>
+                    </div>
+                    
+                    <!-- Theme Switcher -->
+                    <div class="theme-switcher">
+                        <button id="themeLight" class="theme-btn active">
+                            <i class="fas fa-sun"></i>
+                            <span data-i18n="light_mode">দিন</span>
+                        </button>
+                        <button id="themeDark" class="theme-btn">
+                            <i class="fas fa-moon"></i>
+                            <span data-i18n="dark_mode">রাত</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="hero">
+            <div class="container">
+                <h1 data-i18n="hero_title">⚡ আল্ট্রা ফাস্ট ওয়াইফাই ইন্টারনেট</h1>
+                <p class="subtitle" data-i18n="hero_subtitle">
+                    ২৪/৭ ১০০% আপটাইম গ্যারান্টি সহ বাংলাদেশের সেরা হাই-স্পিড ওয়াইফাই সার্ভিস
+                </p>
+                
+                <div class="cta-buttons">
+                    <a href="#pricing" class="btn btn-primary" data-i18n="view_plans">প্ল্যান দেখুন</a>
+                    <a href="#register" class="btn btn-secondary" data-i18n="register_now">এখনই রেজিস্টার করুন</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title" data-i18n="our_features">আমাদের বিশেষ সুবিধাসমূহ</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 data-i18n="feature_uptime">২৪/৭ ১০০% আপটাইম</h3>
+                    <p data-i18n="feature_uptime_desc">
+                        বিদ্যুৎ চলে গেলেও আমাদের ব্যাকআপ সিস্টেমে ২৪ ঘণ্টা সার্ভিস
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3 data-i18n="feature_speed">৫০০ Mbps স্পিড</h3>
+                    <p data-i18n="feature_speed_desc">
+                        ৪K স্ট্রিমিং, গেমিং, ডাউনলোড - সবকিছুর জন্য পারফেক্ট স্পিড
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3 data-i18n="feature_gaming">গেমিং অপটিমাইজড</h3>
+                    <p data-i18n="feature_gaming_desc">
+                        Valorant, Steam, Fivem, Epic Games - সব গেমে লো লেটেন্সি
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3 data-i18n="feature_streaming">৪K স্ট্রিমিং</h3>
+                    <p data-i18n="feature_streaming_desc">
+                        Netflix, YouTube, Amazon Prime - বাফারিং ছাড়া ৪K স্ট্রিমিং
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3 data-i18n="feature_ftp">FTP সার্ভার</h3>
+                    <p data-i18n="feature_ftp_desc">
+                        নিজস্ব FTP সার্ভার এক্সেস, ফাইল শেয়ারিং সহজ
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 data-i18n="feature_cdn">CDN এক্সেলারেশন</h3>
+                    <p data-i18n="feature_cdn_desc">
+                        জনপ্রিয় সার্ভারে ১০x স্পিড, কনটেন্ট ডেলিভারি নেটওয়ার্ক
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title" data-i18n="pricing_plans">প্যাকেজ ও মূল্য</h2>
+            
+            <div class="pricing-cards">
+                <div class="price-card">
+                    <div class="price-header">
+                        <h3 data-i18n="basic_plan">বেসিক প্ল্যান</h3>
+                        <div class="price">
+                            <span class="amount">১৫০</span>
+                            <span class="currency" data-i18n="bdt">টাকা/মাস</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> <span data-i18n="plan_device">১টি ডিভাইস</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="plan_unlimited">আনলিমিটেড ডেটা</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="plan_speed">৫০০ Mbps স্পিড</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="plan_ftp">FTP সার্ভার এক্সেস</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="plan_support">২৪/৭ সাপোর্ট</span></li>
+                    </ul>
+                    
+                    <button class="btn btn-primary select-plan" data-plan="basic" data-i18n="select_plan">
+                        সিলেক্ট প্ল্যান
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <h3 data-i18n="payment_methods">পেমেন্ট পদ্ধতি</h3>
+                <div class="methods-grid">
+                    <div class="method" data-method="bkash">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bkash_Logo.svg/512px-Bkash_Logo.svg.png" alt="bKash">
+                        <span data-i18n="bkash">বিকাশ</span>
+                    </div>
+                    <div class="method" data-method="nagad">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Nagad_Logo.png/512px-Nagad_Logo.png" alt="Nagad">
+                        <span data-i18n="nagad">নগদ</span>
+                    </div>
+                    <div class="method" data-method="upay">
+                        <img src="https://seeklogo.com/images/U/uPay-logo-69A0EB0C4B-seeklogo.com.png" alt="Upay">
+                        <span data-i18n="upay">আপে</span>
+                    </div>
+                    <div class="method" data-method="rocket">
+                        <img src="https://www.dutchbanglabank.com/images/rocket.png" alt="Rocket">
+                        <span data-i18n="rocket">রকেট</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Form -->
+    <section class="registration" id="register">
+        <div class="container">
+            <h2 class="section-title" data-i18n="registration_form">রেজিস্ট্রেশন ফর্ম</h2>
+            
+            <div class="form-container">
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="name" data-i18n="full_name">পূর্ণ নাম *</label>
+                        <input type="text" id="name" 
+                               data-placeholder-bn="আপনার পূর্ণ নাম লিখুন"
+                               data-placeholder-en="Enter your full name"
+                               required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" data-i18n="phone_number">মোবাইল নাম্বার *</label>
+                        <input type="tel" id="phone"
+                               data-placeholder-bn="01XXXXXXXXX"
+                               data-placeholder-en="01XXXXXXXXX"
+                               pattern="[0-9]{11}"
+                               required>
+                        <small data-i18n="phone_hint">WhatsApp এ পাসওয়ার্ড পাঠানোর জন্য</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" data-i18n="email_address">ইমেইল ঠিকানা</label>
+                        <input type="email" id="email"
+                               data-placeholder-bn="আপনার ইমেইল লিখুন"
+                               data-placeholder-en="Enter your email address">
+                        <small data-i18n="email_hint">ঐচ্ছিক - ইমেইলেও পাসওয়ার্ড পাঠানো হবে</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentMethod" data-i18n="payment_method">পেমেন্ট মেথড *</label>
+                        <select id="paymentMethod" required>
+                            <option value="" data-i18n="select_method">পেমেন্ট মেথড নির্বাচন করুন</option>
+                            <option value="bkash" data-i18n="bkash">বিকাশ</option>
+                            <option value="nagad" data-i18n="nagad">নগদ</option>
+                            <option value="upay" data-i18n="upay">আপে</option>
+                            <option value="rocket" data-i18n="rocket">রকেট</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transactionId" data-i18n="transaction_id">ট্রানজেকশন আইডি *</label>
+                        <input type="text" id="transactionId"
+                               data-placeholder-bn="TRX123456789"
+                               data-placeholder-en="TRX123456789"
+                               required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="senderNumber" data-i18n="sender_number">সেন্ডার নম্বর *</label>
+                        <input type="tel" id="senderNumber"
+                               data-placeholder-bn="যে নাম্বার থেকে পাঠিয়েছেন"
+                               data-placeholder-en="Sender phone number"
+                               pattern="[0-9]{11}"
+                               required>
+                    </div>
+                    
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            <span data-i18n="terms_text">
+                                আমি ১৫০ টাকা পাঠিয়েছি এবং সমস্ত শর্ত মেনে নিচ্ছি। 
+                                পেমেন্ট ভেরিফাই হলে WhatsApp/ইমেইলে পাসওয়ার্ড পাবো।
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary submit-btn" data-i18n="submit_form">
+                        সাবমিট করুন
+                    </button>
+                </form>
+
+                <!-- version 1.0.1 -->
+                 <!-- Add this right after the Registration Form section -->
+<section class="user-panel" id="userPanel">
+    <div class="container">
+        <h2 class="section-title" data-i18n="user_panel">ইউজার প্যানেল</h2>
+        
+        <!-- Promo Code Login Form -->
+        <div class="promo-login" id="promoLoginForm">
+            <div class="login-container">
+                <h3 data-i18n="promo_login">প্রোমো কোড দিয়ে লগইন করুন</h3>
+                <p data-i18n="promo_login_desc">
+                    আপনার রেজিস্ট্রেশনের পর WhatsApp/ইমেইলে প্রাপ্ত প্রোমো কোডটি দিন
+                </p>
+                
+                <form id="promoLoginFormElement">
+                    <div class="form-group">
+                        <input type="text" id="promoCode" 
+                               data-placeholder-bn="আপনার প্রোমো কোড দিন"
+                               data-placeholder-en="Enter your promo code"
+                               required>
+                        <small data-i18n="promo_hint">যেমন: ULTRA-XXXX-XXXX</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-i18n="login">
+                        লগইন করুন
+                    </button>
+                </form>
+                
+                <div class="login-help">
+                    <p data-i18n="promo_help">
+                        প্রোমো কোড পাননি? আমাদের WhatsApp বা ইমেইলে যোগাযোগ করুন
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Dashboard (Initially Hidden) -->
+        <div class="user-dashboard" id="userDashboard" style="display: none;">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="userName">ইউজারের নাম</h3>
+                        <p class="user-id" data-i18n="user_id">ইউজার আইডি: <span id="userId">ULTRA-XXXX</span></p>
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary logout-btn" id="logoutBtn" data-i18n="logout">
+                    লগআউট
+                </button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Package Info Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <i class="fas fa-cube"></i>
+                        <h4 data-i18n="package_info">প্যাকেজ তথ্য</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="info-item">
+                            <span data-i18n="plan_type">প্ল্যান টাইপ:</span>
+                            <strong id="userPlan">বেসিক প্ল্যান</strong>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="devices_allowed">অনুমোদিত ডিভাইস:</span>
+                            <strong id="allowedDevices">১টি ডিভাইস</strong>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="devices_used">ব্যবহৃত ডিভাইস:</span>
+                            <span class="device-count" id="usedDevices">০</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="deviceProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Info Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <i class="fas fa-credit-card"></i>
+                        <h4 data-i18n="payment_info">পেমেন্ট তথ্য</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="info-item">
+                            <span data-i18n="registration_date">রেজিস্ট্রেশন তারিখ:</span>
+                            <strong id="regDate">১ জানুয়ারি ২০২৪</strong>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="last_payment">সর্বশেষ পেমেন্ট:</span>
+                            <strong id="lastPayment">১৫০ টাকা</strong>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="next_payment">পরবর্তী পেমেন্ট:</span>
+                            <strong class="due-date" id="nextPayment">১ ফেব্রুয়ারি ২০২৪</strong>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="payment_status">স্ট্যাটাস:</span>
+                            <span class="status active" id="paymentStatus" data-i18n="active">একটিভ</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Connection Info Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <i class="fas fa-wifi"></i>
+                        <h4 data-i18n="connection_info">কানেকশন তথ্য</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="info-item">
+                            <span data-i18n="wifi_name">WiFi নাম:</span>
+                            <code id="wifiName">ULTRA_WIFI_ZONE</code>
+                            <button class="copy-btn" onclick="copyToClipboard('wifiName')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="wifi_password">WiFi পাসওয়ার্ড:</span>
+                            <code id="wifiPassword">••••••••</code>
+                            <button class="copy-btn" onclick="copyToClipboard('wifiPassword')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="show-btn" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="speed">স্পিড:</span>
+                            <strong>500 Mbps</strong>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="uptime">আপটাইম:</span>
+                            <span class="status success">100%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FTP Server Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <i class="fas fa-server"></i>
+                        <h4 data-i18n="ftp_server">FTP সার্ভার</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="info-item">
+                            <span data-i18n="ftp_host">হোস্ট:</span>
+                            <code id="ftpHost">ftp.ultrawifi.com</code>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="ftp_username">ইউজারনেম:</span>
+                            <code id="ftpUsername">ULTRA-XXXX</code>
+                            <button class="copy-btn" onclick="copyToClipboard('ftpUsername')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="ftp_password">পাসওয়ার্ড:</span>
+                            <code id="ftpPassword">••••••••</code>
+                            <button class="copy-btn" onclick="copyToClipboard('ftpPassword')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="show-btn" onclick="toggleFTPPassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="info-item">
+                            <span data-i18n="ftp_port">পোর্ট:</span>
+                            <code>21</code>
+                        </div>
+                        <a href="ftp://ftp.ultrawifi.com" class="btn btn-small" target="_blank" data-i18n="connect_ftp">
+                            FTP তে কানেক্ট করুন
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Device Management Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <i class="fas fa-laptop"></i>
+                        <h4 data-i18n="device_management">ডিভাইস ব্যবস্থাপনা</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="device-list" id="deviceList">
+                            <div class="device-item">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Samsung Galaxy S23</span>
+                                <span class="device-status active" data-i18n="connected">কানেক্টেড</span>
+                                <button class="btn btn-small btn-danger" data-i18n="disconnect">
+                                    ডিসকানেক্ট
+                                </button>
+                            </div>
+                            <!-- More devices will be added dynamically -->
+                        </div>
+                        <button class="btn btn-small" id="addDeviceBtn" data-i18n="add_device">
+                            নতুন ডিভাইস যোগ করুন
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions Card -->
+                <div class="dashboard-card quick-actions">
+                    <div class="card-header">
+                        <i class="fas fa-bolt"></i>
+                        <h4 data-i18n="quick_actions">দ্রুত কাজ</h4>
+                    </div>
+                    <div class="card-content">
+                        <button class="action-btn" id="changePasswordBtn" data-i18n="change_wifi_password">
+                            WiFi পাসওয়ার্ড পরিবর্তন
+                        </button>
+                        <button class="action-btn" id="upgradePlanBtn" data-i18n="upgrade_plan">
+                            প্ল্যান আপগ্রেড করুন
+                        </button>
+                        <button class="action-btn" id="reportIssueBtn" data-i18n="report_issue">
+                            সমস্যা রিপোর্ট করুন
+                        </button>
+                        <button class="action-btn" id="viewInvoiceBtn" data-i18n="view_invoice">
+                            ইনভয়েস দেখুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Usage Statistics -->
+            <div class="usage-stats">
+                <h4 data-i18n="usage_statistics">ব্যবহার পরিসংখ্যান</h4>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-database"></i>
+                        <h5 data-i18n="data_used">ব্যবহৃত ডেটা</h5>
+                        <p class="stat-value" id="dataUsed">125 GB</p>
+                        <p class="stat-label" data-i18n="of_unlimited">আনলিমিটেড এর মধ্যে</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <h5 data-i18n="online_time">অনলাইন সময়</h5>
+                        <p class="stat-value" id="onlineTime">18h 45m</p>
+                        <p class="stat-label" data-i18n="today">আজ</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h5 data-i18n="avg_speed">গড় স্পিড</h5>
+                        <p class="stat-value" id="avgSpeed">450 Mbps</p>
+                        <p class="stat-label" data-i18n="download">ডাউনলোড</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h5 data-i18n="days_left">দিন বাকি</h5>
+                        <p class="stat-value" id="daysLeft">15</p>
+                        <p class="stat-label" data-i18n="current_cycle">বর্তমান চক্র</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Device Modal -->
+<div id="addDeviceModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 data-i18n="add_new_device">নতুন ডিভাইস যোগ করুন</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addDeviceForm">
+                <div class="form-group">
+                    <label data-i18n="device_name">ডিভাইসের নাম</label>
+                    <input type="text" id="newDeviceName" 
+                           data-placeholder-bn="যেমন: আমার ল্যাপটপ"
+                           data-placeholder-en="e.g., My Laptop"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="device_type">ডিভাইস টাইপ</label>
+                    <select id="deviceType" required>
+                        <option value="mobile" data-i18n="mobile_phone">মোবাইল ফোন</option>
+                        <option value="laptop" data-i18n="laptop">ল্যাপটপ</option>
+                        <option value="pc" data-i18n="desktop_pc">ডেস্কটপ পিসি</option>
+                        <option value="tablet" data-i18n="tablet">ট্যাবলেট</option>
+                        <option value="tv" data-i18n="smart_tv">স্মার্ট টিভি</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="mac_address">MAC Address (ঐচ্ছিক)</label>
+                    <input type="text" id="macAddress" 
+                           data-placeholder-bn="XX:XX:XX:XX:XX:XX"
+                           data-placeholder-en="XX:XX:XX:XX:XX:XX">
+                </div>
+                <button type="submit" class="btn btn-primary" data-i18n="add_device">
+                    ডিভাইস যোগ করুন
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 data-i18n="change_wifi_password">WiFi পাসওয়ার্ড পরিবর্তন</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label data-i18n="new_password">নতুন পাসওয়ার্ড</label>
+                    <input type="password" id="newWifiPassword" required>
+                    <small data-i18n="password_rules">ন্যূনতম ৮ অক্ষর, সংখ্যা ও বিশেষ চিহ্ন সহ</small>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="confirm_password">পাসওয়ার্ড নিশ্চিত করুন</label>
+                    <input type="password" id="confirmWifiPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" data-i18n="change_password">
+                    পাসওয়ার্ড পরিবর্তন করুন
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+                <!-- version 1.0.1 -->
+                
+                <!-- Payment Instructions -->
+                <div class="instructions">
+                    <h3 data-i18n="payment_steps">পেমেন্ট করার নিয়ম</h3>
+                    <ol>
+                        <li data-i18n="step1">বিকাশ/নগদ/আপে/রকেট এ ১৫০ টাকা পাঠান</li>
+                        <li data-i18n="step2">নিচের নম্বরে পাঠান: <strong>01XXX-XXXXXX</strong></li>
+                        <li data-i18n="step3">ট্রানজেকশন আইডি নোট করুন</li>
+                        <li data-i18n="step4">উপরের ফর্ম পূরণ করুন</li>
+                        <li data-i18n="step5">আমরা পেমেন্ট ভেরিফাই করব</li>
+                        <li data-i18n="step6">WhatsApp/ইমেইলে পাসওয়ার্ড পাবেন</li>
+                    </ol>
+                    
+                    <div class="contact-info">
+                        <h4 data-i18n="contact_us">যোগাযোগ করুন</h4>
+                        <p>
+                            <i class="fab fa-whatsapp"></i>
+                            <span data-i18n="whatsapp">WhatsApp:</span> +8801XXX-XXXXXX
+                        </p>
+                        <p>
+                            <i class="fas fa-envelope"></i>
+                            <span data-i18n="email">ইমেইল:</span> support@ultrawifi.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-wifi"></i>
+                    <span data-i18n="site_name">আল্ট্রা ওয়াইফাই</span>
+                </div>
+                
+                <p class="footer-text" data-i18n="footer_text">
+                    বাংলাদেশের সেরা হাই-স্পিড ওয়াইফাই সার্ভিস প্রোভাইডার
+                </p>
+                
+                <div class="footer-links">
+                    <a href="#features" data-i18n="features">ফিচারস</a>
+                    <a href="#pricing" data-i18n="pricing">মূল্য</a>
+                    <a href="#register" data-i18n="register">রেজিস্টার</a>
+                </div>
+                
+                <p class="copyright" data-i18n="copyright">
+                    © ২০২৪ আল্ট্রা ওয়াইফাই। সর্বস্বত্ব সংরক্ষিত।
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 data-i18n="success_title">সফলভাবে সাবমিট হয়েছে!</h3>
+            <p id="successMessage" data-i18n="success_message">
+                আপনার ফর্ম সফলভাবে জমা দেওয়া হয়েছে। আমরা পেমেন্ট ভেরিফাই করে 
+                WhatsApp/ইমেইলে পাসওয়ার্ড পাঠাবো। ২৪ ঘণ্টার মধ্যে পেয়ে যাবেন।
+            </p>
+            <button class="btn btn-primary close-modal" data-i18n="close_modal">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon error">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <h3 data-i18n="error_title">ত্রুটি হয়েছে!</h3>
+            <p id="errorMessage" data-i18n="error_message">
+                সাবমিট করতে সমস্যা হচ্ছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।
+            </p>
+            <button class="btn btn-primary close-modal" data-i18n="close_modal">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p data-i18n="processing">প্রসেসিং হচ্ছে...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

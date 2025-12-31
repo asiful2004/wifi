@@ -762,12 +762,13 @@ class WiFiBillingSystem {
     }
     
     async sendToDiscord(data, promoCode) {
-        // YOUR DISCORD WEBHOOK URL - Replace this with your actual webhook URL
-        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1455692458733080808/EXt-DQQHQBwhQ0FGlG95PRLnOClGYpYUpyS8V0AV1QsPFv4v1W5NmqyuCxybA1lcieX6';
+        // আপনার আসল Discord Webhook URL
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1426415614284795904/Tf4B5PhOcRijAF1QX1woWUS3Q7q0m9mM09ED2gMHReAYr3UwPgwyX59po9unUmu-jlq6';
         
-        if (!WEBHOOK_URL || WEBHOOK_URL.includes('https://discord.com/api/webhooks/1455692458733080808/EXt-DQQHQBwhQ0FGlG95PRLnOClGYpYUpyS8V0AV1QsPFv4v1W5NmqyuCxybA1lcieX6')) {
+        // শুধুমাত্র check করুন যদি URL না থাকে
+        if (!WEBHOOK_URL) {
             console.warn('Discord webhook URL not configured');
-            return true; // For testing, return success
+            return false;
         }
         
         const message = {
@@ -790,6 +791,7 @@ class WiFiBillingSystem {
         };
         
         try {
+            console.log('Sending to Discord webhook...');
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -797,9 +799,11 @@ class WiFiBillingSystem {
             });
             
             if (!response.ok) {
-                throw new Error(`Discord webhook error: ${response.status}`);
+                console.error(`Discord webhook error: ${response.status}`);
+                return false;
             }
             
+            console.log('Discord webhook sent successfully');
             return true;
         } catch (error) {
             console.error('Discord webhook error:', error);

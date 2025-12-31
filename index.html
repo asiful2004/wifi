@@ -10,6 +10,108 @@
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3197/3197975.png">
     <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 300px;
+            max-width: 400px;
+            z-index: 10000;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-left: 5px solid #047857;
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-left: 5px solid #b91c1c;
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-left: 5px solid #b45309;
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border-left: 5px solid #1d4ed8;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%) translateY(-20px); opacity: 0; }
+            to { transform: translateX(0) translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0) translateY(0); opacity: 1; }
+            to { transform: translateX(100%) translateY(-20px); opacity: 0; }
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .notification-close {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 15px;
+            padding: 5px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            transition: background 0.2s;
+        }
+        
+        .notification-close:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        /* Active buttons styles */
+        .lang-btn.active, .theme-btn.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .lang-btn.active .active-indicator,
+        .theme-btn.active .active-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+        
+        .lang-btn.active .lang-text,
+        .theme-btn.active .theme-text,
+        .lang-btn.active i,
+        .theme-btn.active i {
+            color: white;
+        }
+    </style>
 </head>
 <body data-theme="light">
     <!-- Header Section -->
@@ -22,7 +124,7 @@
                 </div>
                 
                 <div class="switchers">
-                    <!-- Language Switcher with Indicator -->
+                    <!-- Language Switcher -->
                     <div class="lang-switcher">
                         <button id="langBn" class="lang-btn" data-lang="bn">
                             <img src="https://flagcdn.com/w20/bd.png" alt="Bangla" class="flag">
@@ -36,7 +138,7 @@
                         </button>
                     </div>
                     
-                    <!-- Theme Switcher with Indicator -->
+                    <!-- Theme Switcher -->
                     <div class="theme-switcher">
                         <button id="themeLight" class="theme-btn" data-theme="light">
                             <i class="fas fa-sun"></i>
@@ -209,7 +311,7 @@
                         <label for="phone" data-i18n="phone_number">মোবাইল নাম্বার *</label>
                         <input type="tel" id="phone"
                                data-placeholder-bn="01XXXXXXXXX"
-                               data-placeholder-en="01XXXXXXXXxX"
+                               data-placeholder-en="01XXXXXXXXX"
                                pattern="[0-9]{11}"
                                required>
                         <small data-i18n="phone_hint">WhatsApp এ পাসওয়ার্ড পাঠানোর জন্য</small>
@@ -411,16 +513,6 @@
                                 </button>
                             </div>
                             <div class="info-item">
-                                <span data-i18n="wifi_password">WiFi পাসওয়ার্ড:</span>
-                                <code id="wifiPassword">••••••••</code>
-                                <button class="copy-btn" onclick="copyToClipboard('wifiPassword')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <button class="show-btn" onclick="togglePassword()">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                            <div class="info-item">
                                 <span data-i18n="speed">স্পিড:</span>
                                 <strong>500 Mbps</strong>
                             </div>
@@ -573,6 +665,1207 @@
         <p data-i18n="processing">প্রসেসিং হচ্ছে...</p>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Configuration - আপনার Supabase credentials
+        const SUPABASE_URL = 'https://oxoyiqeyuhnudkexnhpa.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_h0JmEF4dLBJ80tr710mwsQ_hwN2g71S';
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1455692458733080808/EXt-DQQHQBwhQ0FGlG95PRLnOClGYpYUpyS8V0AV1QsPFv4v1W5NmqyuCxybA1lcieX6';
+
+        class WiFiBillingSystem {
+            constructor() {
+                this.currentLang = localStorage.getItem('wifi_lang') || 'bn';
+                this.currentTheme = localStorage.getItem('wifi_theme') || 'light';
+                this.selectedPlan = 'basic';
+                this.formData = {};
+                this.currentUser = null;
+                this.isLoggedIn = false;
+                
+                // Initialize Supabase Client
+                try {
+                    if (typeof supabase !== 'undefined') {
+                        this.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                        console.log('✅ Supabase client initialized');
+                    } else {
+                        console.error('❌ Supabase library not loaded');
+                        this.showNotification('সিস্টেম লোড হতে সমস্যা হচ্ছে', 'error');
+                    }
+                } catch (error) {
+                    console.error('❌ Supabase init error:', error);
+                }
+            }
+            
+            async init() {
+                console.log('🚀 WiFi System initializing...');
+                
+                // Test Supabase connection
+                try {
+                    const connected = await this.testSupabaseConnection();
+                    if (!connected) {
+                        this.showNotification('ডাটাবেস কানেকশন সমস্যা', 'warning');
+                    }
+                } catch (error) {
+                    console.warn('⚠️ Supabase connection test failed:', error);
+                }
+                
+                await this.setupEventListeners();
+                await this.loadLanguage();
+                this.applyTheme(this.currentTheme);
+                this.updateFormPlaceholders();
+                this.updateActiveButtons();
+                
+                // Check if user is already logged in
+                const loggedInUser = this.getLoggedInUser();
+                if (loggedInUser && window.location.hash === '#userPanel') {
+                    await this.showDashboard(loggedInUser);
+                }
+                
+                console.log('✅ WiFi System ready!');
+            }
+            
+            async setupEventListeners() {
+                console.log('🔧 Setting up event listeners...');
+                
+                // Language switcher
+                document.getElementById('langBn')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.setLanguage('bn');
+                });
+                
+                document.getElementById('langEn')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.setLanguage('en');
+                });
+                
+                // Theme switcher
+                document.getElementById('themeLight')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.setTheme('light');
+                });
+                
+                document.getElementById('themeDark')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.setTheme('dark');
+                });
+                
+                // Plan selection
+                document.querySelector('.select-plan')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.selectedPlan = 'basic';
+                    this.scrollToForm();
+                });
+                
+                // Payment method selection
+                document.querySelectorAll('.method').forEach(method => {
+                    method.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const paymentMethod = method.getAttribute('data-method');
+                        const selectElement = document.getElementById('paymentMethod');
+                        if (selectElement) {
+                            selectElement.value = paymentMethod;
+                        }
+                        this.highlightSelectedMethod(paymentMethod);
+                    });
+                });
+                
+                // Registration Form submission
+                document.getElementById('registrationForm')?.addEventListener('submit', (e) => this.handleRegistration(e));
+                
+                // Promo code login
+                document.getElementById('promoLoginFormElement')?.addEventListener('submit', (e) => this.handlePromoLogin(e));
+                
+                // Logout button
+                document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleLogout();
+                });
+                
+                // Add device button
+                document.getElementById('addDeviceBtn')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showAddDeviceModal();
+                });
+                
+                // Modal close buttons
+                document.querySelectorAll('.close-modal').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.closeModals();
+                    });
+                });
+                
+                // Add device form
+                document.getElementById('addDeviceForm')?.addEventListener('submit', (e) => this.handleAddDevice(e));
+                
+                console.log('✅ All event listeners set up');
+            }
+            
+            // ==================== LANGUAGE & THEME SYSTEM ====================
+            
+            getEmbeddedTranslations(lang) {
+                const translations = {
+                    // Site Info
+                    'site_name': lang === 'bn' ? 'আল্ট্রা ওয়াইফাই' : 'Ultra WiFi',
+                    'hero_title': lang === 'bn' ? '⚡ আল্ট্রা ফাস্ট ওয়াইফাই ইন্টারনেট' : '⚡ Ultra Fast WiFi Internet',
+                    'hero_subtitle': lang === 'bn' ? '২৪/৭ ১০০% আপটাইম গ্যারান্টি সহ বাংলাদেশের সেরা হাই-স্পিড ওয়াইফাই সার্ভিস' : 'Bangladesh\'s best high-speed WiFi service with 24/7 100% uptime guarantee',
+                    
+                    // Navigation
+                    'view_plans': lang === 'bn' ? 'প্ল্যান দেখুন' : 'View Plans',
+                    'register_now': lang === 'bn' ? 'এখনই রেজিস্টার করুন' : 'Register Now',
+                    'light_mode': lang === 'bn' ? 'দিন' : 'Light',
+                    'dark_mode': lang === 'bn' ? 'রাত' : 'Dark',
+                    
+                    // Features
+                    'our_features': lang === 'bn' ? 'আমাদের বিশেষ সুবিধাসমূহ' : 'Our Features',
+                    'feature_uptime': lang === 'bn' ? '২৪/৭ ১০০% আপটাইম' : '24/7 100% Uptime',
+                    'feature_uptime_desc': lang === 'bn' ? 'বিদ্যুৎ চলে গেলেও আমাদের ব্যাকআপ সিস্টেমে ২৪ ঘণ্টা সার্ভিস' : '24-hour service with our backup system even during power outages',
+                    'feature_speed': lang === 'bn' ? '৫০০ Mbps স্পিড' : '500 Mbps Speed',
+                    'feature_speed_desc': lang === 'bn' ? '৪K স্ট্রিমিং, গেমিং, ডাউনলোড - সবকিছুর জন্য পারফেক্ট স্পিড' : 'Perfect speed for 4K streaming, gaming, downloads - everything',
+                    'feature_gaming': lang === 'bn' ? 'গেমিং অপটিমাইজড' : 'Gaming Optimized',
+                    'feature_gaming_desc': lang === 'bn' ? 'Valorant, Steam, Fivem, Epic Games - সব গেমে লো লেটেন্সি' : 'Valorant, Steam, Fivem, Epic Games - low latency in all games',
+                    'feature_streaming': lang === 'bn' ? '৪K স্ট্রিমিং' : '4K Streaming',
+                    'feature_streaming_desc': lang === 'bn' ? 'Netflix, YouTube, Amazon Prime - বাফারিং ছাড়া ৪K স্ট্রিমিং' : 'Netflix, YouTube, Amazon Prime - 4K streaming without buffering',
+                    'feature_ftp': lang === 'bn' ? 'মুভি সার্ভার' : 'Movie Server',
+                    'feature_ftp_desc': lang === 'bn' ? 'এক্সক্লুসিভ HD মুভি সার্ভার - সিনেমা দেখার বিশেষ সুবিধা' : 'Exclusive HD movie server - special benefit for watching movies',
+                    'feature_cdn': lang === 'bn' ? 'CDN এক্সেলারেশন' : 'CDN Acceleration',
+                    'feature_cdn_desc': lang === 'bn' ? 'জনপ্রিয় সার্ভারে ১০x স্পিড, কনটেন্ট ডেলিভারি নেটওয়ার্ক' : '10x speed on popular servers, content delivery network',
+                    
+                    // Pricing
+                    'pricing_plans': lang === 'bn' ? 'প্যাকেজ ও মূল্য' : 'Packages & Pricing',
+                    'basic_plan': lang === 'bn' ? 'বেসিক প্ল্যান' : 'Basic Plan',
+                    'bdt': lang === 'bn' ? 'টাকা/মাস' : 'BDT/Month',
+                    'plan_device': lang === 'bn' ? '১টি ডিভাইস' : '1 Device',
+                    'plan_unlimited': lang === 'bn' ? 'আনলিমিটেড ডেটা' : 'Unlimited Data',
+                    'plan_speed': lang === 'bn' ? '৫০০ Mbps স্পিড' : '500 Mbps Speed',
+                    'plan_ftp': lang === 'bn' ? 'মুভি সার্ভার এক্সেস' : 'Movie Server Access',
+                    'plan_support': lang === 'bn' ? '২৪/৭ সাপোর্ট' : '24/7 Support',
+                    'select_plan': lang === 'bn' ? 'সিলেক্ট প্ল্যান' : 'Select Plan',
+                    
+                    // Payment Methods
+                    'payment_methods': lang === 'bn' ? 'পেমেন্ট পদ্ধতি' : 'Payment Methods',
+                    'bkash': lang === 'bn' ? 'বিকাশ' : 'bKash',
+                    'nagad': lang === 'bn' ? 'নগদ' : 'Nagad',
+                    'upay': lang === 'bn' ? 'আপে' : 'Upay',
+                    'rocket': lang === 'bn' ? 'রকেট' : 'Rocket',
+                    
+                    // Registration Form
+                    'registration_form': lang === 'bn' ? 'রেজিস্ট্রেশন ফর্ম' : 'Registration Form',
+                    'full_name': lang === 'bn' ? 'পূর্ণ নাম *' : 'Full Name *',
+                    'phone_number': lang === 'bn' ? 'মোবাইল নাম্বার *' : 'Phone Number *',
+                    'phone_hint': lang === 'bn' ? 'WhatsApp এ পাসওয়ার্ড পাঠানোর জন্য' : 'For sending password via WhatsApp',
+                    'email_address': lang === 'bn' ? 'ইমেইল ঠিকানা' : 'Email Address',
+                    'email_hint': lang === 'bn' ? 'ঐচ্ছিক - ইমেইলেও পাসওয়ার্ড পাঠানো হবে' : 'Optional - password will also be sent to email',
+                    'payment_method': lang === 'bn' ? 'পেমেন্ট মেথড *' : 'Payment Method *',
+                    'select_method': lang === 'bn' ? 'পেমেন্ট মেথড নির্বাচন করুন' : 'Select Payment Method',
+                    'transaction_id': lang === 'bn' ? 'ট্রানজেকশন আইডি *' : 'Transaction ID *',
+                    'sender_number': lang === 'bn' ? 'সেন্ডার নম্বর *' : 'Sender Number *',
+                    'terms_text': lang === 'bn' ? 'আমি ১৫০ টাকা পাঠিয়েছি এবং সমস্ত শর্ত মেনে নিচ্ছি। পেমেন্ট ভেরিফাই হলে WhatsApp/ইমেইলে পাসওয়ার্ড পাবো।' : 'I have sent 150 BDT and agree to all terms. Will receive password via WhatsApp/Email after payment verification.',
+                    'submit_form': lang === 'bn' ? 'সাবমিট করুন' : 'Submit Form',
+                    'payment_steps': lang === 'bn' ? 'পেমেন্ট করার নিয়ম' : 'Payment Steps',
+                    'step1': lang === 'bn' ? 'বিকাশ/নগদ/আপে/রকেট এ ১৫০ টাকা পাঠান' : 'Send 150 BDT via bKash/Nagad/Upay/Rocket',
+                    'step2': lang === 'bn' ? 'নিচের নম্বরে পাঠান: <strong>01XXX-XXXXXX</strong>' : 'Send to: <strong>01XXX-XXXXXX</strong>',
+                    'step3': lang === 'bn' ? 'ট্রানজেকশন আইডি নোট করুন' : 'Note the Transaction ID',
+                    'step4': lang === 'bn' ? 'উপরের ফর্ম পূরণ করুন' : 'Fill the form above',
+                    'step5': lang === 'bn' ? 'আমরা পেমেন্ট ভেরিফাই করব' : 'We will verify payment',
+                    'step6': lang === 'bn' ? 'WhatsApp/ইমেইলে পাসওয়ার্ড পাবেন' : 'Receive password via WhatsApp/Email',
+                    'contact_us': lang === 'bn' ? 'যোগাযোগ করুন' : 'Contact Us',
+                    'whatsapp': lang === 'bn' ? 'WhatsApp:' : 'WhatsApp:',
+                    'email': lang === 'bn' ? 'ইমেইল:' : 'Email:',
+                    
+                    // User Panel
+                    'user_panel': lang === 'bn' ? 'ইউজার প্যানেল' : 'User Panel',
+                    'promo_login': lang === 'bn' ? 'প্রোমো কোড দিয়ে লগইন করুন' : 'Login with Promo Code',
+                    'promo_login_desc': lang === 'bn' ? 'আপনার রেজিস্ট্রেশনের পর WhatsApp/ইমেইলে প্রাপ্ত প্রোমো কোডটি দিন' : 'Enter the promo code received via WhatsApp/Email after registration',
+                    'promo_hint': lang === 'bn' ? 'যেমন: ULTRA-XXXX-XXXX' : 'e.g., ULTRA-XXXX-XXXX',
+                    'login': lang === 'bn' ? 'লগইন করুন' : 'Login',
+                    'promo_help': lang === 'bn' ? 'প্রোমো কোড পাননি? আমাদের WhatsApp বা ইমেইলে যোগাযোগ করুন' : 'Didn\'t receive promo code? Contact us on WhatsApp or Email',
+                    'logout': lang === 'bn' ? 'লগআউট' : 'Logout',
+                    'user_id': lang === 'bn' ? 'ইউজার আইডি:' : 'User ID:',
+                    'package_info': lang === 'bn' ? 'প্যাকেজ তথ্য' : 'Package Info',
+                    'plan_type': lang === 'bn' ? 'প্ল্যান টাইপ:' : 'Plan Type:',
+                    'devices_allowed': lang === 'bn' ? 'অনুমোদিত ডিভাইস:' : 'Allowed Devices:',
+                    'devices_used': lang === 'bn' ? 'ব্যবহৃত ডিভাইস:' : 'Used Devices:',
+                    'payment_info': lang === 'bn' ? 'পেমেন্ট তথ্য' : 'Payment Info',
+                    'registration_date': lang === 'bn' ? 'রেজিস্ট্রেশন তারিখ:' : 'Registration Date:',
+                    'last_payment': lang === 'bn' ? 'সর্বশেষ পেমেন্ট:' : 'Last Payment:',
+                    'next_payment': lang === 'bn' ? 'পরবর্তী পেমেন্ট:' : 'Next Payment:',
+                    'payment_status': lang === 'bn' ? 'স্ট্যাটাস:' : 'Status:',
+                    'connection_info': lang === 'bn' ? 'কানেকশন তথ্য' : 'Connection Info',
+                    'wifi_name': lang === 'bn' ? 'WiFi নাম:' : 'WiFi Name:',
+                    'speed': lang === 'bn' ? 'স্পিড:' : 'Speed:',
+                    'uptime': lang === 'bn' ? 'আপটাইম:' : 'Uptime:',
+                    'movie_server': lang === 'bn' ? 'মুভি সার্ভার' : 'Movie Server',
+                    'device_management': lang === 'bn' ? 'ডিভাইস ব্যবস্থাপনা' : 'Device Management',
+                    'add_device': lang === 'bn' ? 'নতুন ডিভাইস যোগ করুন' : 'Add New Device',
+                    'add_new_device': lang === 'bn' ? 'নতুন ডিভাইস যোগ করুন' : 'Add New Device',
+                    'device_name': lang === 'bn' ? 'ডিভাইসের নাম' : 'Device Name',
+                    'device_type': lang === 'bn' ? 'ডিভাইস টাইপ' : 'Device Type',
+                    'mobile_phone': lang === 'bn' ? 'মোবাইল ফোন' : 'Mobile Phone',
+                    'laptop': lang === 'bn' ? 'ল্যাপটপ' : 'Laptop',
+                    'desktop_pc': lang === 'bn' ? 'ডেস্কটপ পিসি' : 'Desktop PC',
+                    'tablet': lang === 'bn' ? 'ট্যাবলেট' : 'Tablet',
+                    'smart_tv': lang === 'bn' ? 'স্মার্ট টিভি' : 'Smart TV',
+                    
+                    // Footer
+                    'footer_text': lang === 'bn' ? 'বাংলাদেশের সেরা হাই-স্পিড ওয়াইফাই সার্ভিস প্রোভাইডার' : 'Bangladesh\'s Best High-Speed WiFi Service Provider',
+                    'features': lang === 'bn' ? 'ফিচারস' : 'Features',
+                    'pricing': lang === 'bn' ? 'মূল্য' : 'Pricing',
+                    'register': lang === 'bn' ? 'রেজিস্টার' : 'Register',
+                    'copyright': lang === 'bn' ? '© ২০২৪ আল্ট্রা ওয়াইফাই। সর্বস্বত্ব সংরক্ষিত।' : '© 2024 Ultra WiFi. All rights reserved.',
+                    
+                    // Modals
+                    'success_title': lang === 'bn' ? 'সফলভাবে সাবমিট হয়েছে!' : 'Submitted Successfully!',
+                    'success_message': lang === 'bn' ? 'আপনার ফর্ম সফলভাবে জমা দেওয়া হয়েছে। আমরা পেমেন্ট ভেরিফাই করে WhatsApp/ইমেইলে পাসওয়ার্ড পাঠাবো। ২৪ ঘণ্টার মধ্যে পেয়ে যাবেন।' : 'Your form has been submitted successfully. We will verify payment and send password via WhatsApp/Email. You will receive within 24 hours.',
+                    'error_title': lang === 'bn' ? 'ত্রুটি হয়েছে!' : 'Error Occurred!',
+                    'error_message': lang === 'bn' ? 'সাবমিট করতে সমস্যা হচ্ছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।' : 'Problem submitting. Please try again later.',
+                    'close_modal': lang === 'bn' ? 'ঠিক আছে' : 'OK',
+                    
+                    // Status
+                    'active': lang === 'bn' ? 'একটিভ' : 'Active',
+                    'expired': lang === 'bn' ? 'মেয়াদোত্তীর্ণ' : 'Expired',
+                    
+                    // Loading
+                    'processing': lang === 'bn' ? 'প্রসেসিং হচ্ছে...' : 'Processing...'
+                };
+                
+                return translations;
+            }
+            
+            async loadLanguage() {
+                console.log('🌐 Loading language:', this.currentLang);
+                
+                try {
+                    this.translations = this.getEmbeddedTranslations(this.currentLang);
+                    this.updatePageContent();
+                    this.updateActiveButtons();
+                    
+                } catch (error) {
+                    console.error('Language load error:', error);
+                }
+            }
+            
+            updatePageContent() {
+                if (!this.translations) {
+                    console.error('No translations available');
+                    return;
+                }
+                
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (this.translations[key]) {
+                        if (element.tagName === 'INPUT' && (element.type === 'submit' || element.type === 'button')) {
+                            element.value = this.translations[key];
+                        } else {
+                            element.textContent = this.translations[key];
+                        }
+                    } else {
+                        console.warn(`Translation key not found: ${key}`);
+                    }
+                });
+                
+                document.documentElement.lang = this.currentLang;
+                this.updateFormPlaceholders();
+                this.updateSwitcherText();
+                
+                console.log('✅ Page content updated');
+            }
+            
+            updateSwitcherText() {
+                const langBnBtn = document.getElementById('langBn');
+                const langEnBtn = document.getElementById('langEn');
+                
+                if (langBnBtn && langEnBtn) {
+                    if (this.currentLang === 'bn') {
+                        langBnBtn.querySelector('.lang-text').textContent = 'বাংলা';
+                        langEnBtn.querySelector('.lang-text').textContent = 'English';
+                    } else {
+                        langBnBtn.querySelector('.lang-text').textContent = 'Bangla';
+                        langEnBtn.querySelector('.lang-text').textContent = 'English';
+                    }
+                }
+            }
+            
+            setLanguage(lang) {
+                if (lang === this.currentLang) {
+                    console.log('Language already set to:', lang);
+                    return;
+                }
+                
+                console.log(`🌐 Setting language to: ${lang}`);
+                
+                this.currentLang = lang;
+                localStorage.setItem('wifi_lang', lang);
+                
+                document.documentElement.style.opacity = '0.7';
+                setTimeout(async () => {
+                    await this.loadLanguage();
+                    this.updateActiveButtons();
+                    document.documentElement.style.opacity = '1';
+                    
+                    this.showNotification(
+                        lang === 'bn' ? '🌐 ভাষা পরিবর্তন করা হয়েছে' : '🌐 Language changed',
+                        'success'
+                    );
+                }, 300);
+            }
+            
+            setTheme(theme) {
+                if (theme === this.currentTheme) {
+                    console.log('Theme already set to:', theme);
+                    return;
+                }
+                
+                console.log(`🎨 Setting theme to: ${theme}`);
+                
+                this.currentTheme = theme;
+                localStorage.setItem('wifi_theme', theme);
+                
+                document.body.style.opacity = '0.7';
+                document.body.style.transition = 'opacity 0.3s ease';
+                
+                setTimeout(() => {
+                    this.applyTheme(theme);
+                    this.updateActiveButtons();
+                    
+                    document.body.style.opacity = '1';
+                    
+                    this.showNotification(
+                        theme === 'light' ? '☀️ লাইট মোড' : '🌙 ডার্ক মোড',
+                        'success'
+                    );
+                }, 300);
+            }
+            
+            applyTheme(theme) {
+                document.body.setAttribute('data-theme', theme);
+                
+                const themeLightIcon = document.querySelector('#themeLight i');
+                const themeDarkIcon = document.querySelector('#themeDark i');
+                
+                if (themeLightIcon && themeDarkIcon) {
+                    if (theme === 'light') {
+                        themeLightIcon.className = 'fas fa-sun';
+                        themeDarkIcon.className = 'fas fa-moon';
+                    } else {
+                        themeLightIcon.className = 'fas fa-sun';
+                        themeDarkIcon.className = 'fas fa-moon';
+                    }
+                }
+            }
+            
+            updateActiveButtons() {
+                console.log('🔄 Updating active buttons...');
+                
+                // Language buttons
+                const langBnBtn = document.getElementById('langBn');
+                const langEnBtn = document.getElementById('langEn');
+                
+                if (langBnBtn && langEnBtn) {
+                    langBnBtn.classList.toggle('active', this.currentLang === 'bn');
+                    langEnBtn.classList.toggle('active', this.currentLang === 'en');
+                }
+                
+                // Theme buttons
+                const themeLightBtn = document.getElementById('themeLight');
+                const themeDarkBtn = document.getElementById('themeDark');
+                
+                if (themeLightBtn && themeDarkBtn) {
+                    themeLightBtn.classList.toggle('active', this.currentTheme === 'light');
+                    themeDarkBtn.classList.toggle('active', this.currentTheme === 'dark');
+                }
+                
+                console.log('✅ Active buttons updated');
+            }
+            
+            updateFormPlaceholders() {
+                document.querySelectorAll('[data-placeholder-bn]').forEach(input => {
+                    const placeholder = this.currentLang === 'bn' 
+                        ? input.getAttribute('data-placeholder-bn')
+                        : input.getAttribute('data-placeholder-en');
+                    
+                    if (placeholder) {
+                        input.placeholder = placeholder;
+                    }
+                });
+            }
+            
+            // ==================== SUPABASE INTEGRATION ====================
+            
+            async testSupabaseConnection() {
+                if (!this.supabaseClient) {
+                    console.error('❌ Supabase client not initialized');
+                    return false;
+                }
+                
+                try {
+                    const { data, error } = await this.supabaseClient
+                        .from('wifi_users')
+                        .select('count')
+                        .limit(1);
+                    
+                    if (error) {
+                        console.error('❌ Supabase connection error:', error);
+                        return false;
+                    }
+                    
+                    console.log('✅ Supabase connection successful');
+                    return true;
+                } catch (error) {
+                    console.error('❌ Connection test failed:', error);
+                    return false;
+                }
+            }
+            
+            async handleRegistration(e) {
+                e.preventDefault();
+                console.log('📝 Registration form submitting...');
+                
+                const formData = {
+                    name: document.getElementById('name')?.value.trim() || '',
+                    phone: document.getElementById('phone')?.value.trim() || '',
+                    email: document.getElementById('email')?.value.trim() || '',
+                    paymentMethod: document.getElementById('paymentMethod')?.value || '',
+                    transactionId: document.getElementById('transactionId')?.value.trim() || '',
+                    senderNumber: document.getElementById('senderNumber')?.value.trim() || '',
+                    plan: this.selectedPlan
+                };
+                
+                // Validation
+                const errors = [];
+                
+                if (!formData.name) errors.push('নাম প্রয়োজন');
+                if (!formData.phone || !/^01[3-9]\d{8}$/.test(formData.phone)) {
+                    errors.push('সঠিক মোবাইল নম্বর দিন (01XXXXXXXXX)');
+                }
+                if (!formData.paymentMethod) errors.push('পেমেন্ট মেথড নির্বাচন করুন');
+                if (!formData.transactionId) errors.push('ট্রানজেকশন আইডি দিন');
+                if (!formData.senderNumber || !/^01[3-9]\d{8}$/.test(formData.senderNumber)) {
+                    errors.push('সঠিক সেন্ডার নম্বর দিন');
+                }
+                
+                if (errors.length > 0) {
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? `ত্রুটি: ${errors.join(', ')}`
+                            : `Error: ${errors.join(', ')}`,
+                        'error'
+                    );
+                    return;
+                }
+                
+                this.showLoading();
+                
+                try {
+                    // Generate promo code
+                    const promoCode = this.generatePromoCode(formData.phone);
+                    const userData = this.createUserData(formData, promoCode);
+                    
+                    console.log('Generated user data:', userData);
+                    
+                    // Save to Supabase
+                    const savedData = await this.saveToSupabase(userData);
+                    
+                    if (savedData) {
+                        console.log('✅ Data saved successfully:', savedData);
+                        
+                        // Send to Discord (optional)
+                        if (DISCORD_WEBHOOK_URL) {
+                            try {
+                                await this.sendToDiscord(formData, promoCode);
+                            } catch (discordError) {
+                                console.warn('Discord send failed:', discordError);
+                            }
+                        }
+                        
+                        // Show success
+                        this.showRegistrationSuccess(userData);
+                        
+                        // Reset form
+                        document.getElementById('registrationForm').reset();
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Registration failed:', error);
+                    
+                    let errorMessage = 'রেজিস্ট্রেশনে সমস্যা হয়েছে';
+                    
+                    if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+                        errorMessage = 'ইন্টারনেট সংযোগ সমস্যা। চেক করুন।';
+                    } else if (error.message.includes('duplicate key')) {
+                        errorMessage = 'এই ট্রানজেকশন আইডি বা ফোন নম্বর আগেই রেজিস্টার্ড';
+                    } else if (error.code === '23505') {
+                        errorMessage = 'এই প্রোমো কোডটি আগে থেকেই রয়েছে। আবার চেষ্টা করুন।';
+                    } else if (error.message.includes('relation "wifi_users" does not exist')) {
+                        errorMessage = 'টেবিল পাওয়া যায়নি। Supabase-এ টেবিল তৈরি করুন।';
+                    }
+                    
+                    this.showNotification(
+                        this.currentLang === 'bn' ? `❌ ${errorMessage}` : `❌ ${errorMessage}`,
+                        'error'
+                    );
+                    
+                    // Save to localStorage as fallback
+                    this.saveToLocalStorage(formData);
+                    
+                } finally {
+                    this.hideLoading();
+                }
+            }
+            
+            generatePromoCode(phone) {
+                const random = Math.random().toString(36).substr(2, 6).toUpperCase();
+                const last4 = phone.slice(-4);
+                return `ULTRA-${last4}-${random}`;
+            }
+            
+            createUserData(formData, promoCode) {
+                const now = new Date();
+                const nextPayment = new Date();
+                nextPayment.setMonth(nextPayment.getMonth() + 1);
+                
+                return {
+                    promoCode: promoCode,
+                    name: formData.name,
+                    phone: formData.phone,
+                    email: formData.email || '',
+                    paymentMethod: formData.paymentMethod,
+                    transactionId: formData.transactionId,
+                    senderNumber: formData.senderNumber,
+                    plan: 'basic',
+                    wifiName: `ULTRA_WIFI_${formData.phone.slice(-4)}`,
+                    devices: [],
+                    registrationDate: now.toISOString(),
+                    nextPaymentDate: nextPayment.toISOString(),
+                    lastPaymentDate: now.toISOString(),
+                    paymentStatus: 'pending'
+                };
+            }
+            
+            async saveToSupabase(userData) {
+                if (!this.supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+                
+                try {
+                    const now = new Date().toISOString();
+                    const nextPayment = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                    
+                    console.log('Inserting data to Supabase...');
+                    
+                    const { data, error } = await this.supabaseClient
+                        .from('wifi_users')
+                        .insert([
+                            {
+                                promo_code: userData.promoCode,
+                                name: userData.name,
+                                phone: userData.phone,
+                                email: userData.email || null,
+                                payment_method: userData.paymentMethod,
+                                transaction_id: userData.transactionId,
+                                sender_number: userData.senderNumber,
+                                plan: userData.plan || 'basic',
+                                registration_date: now,
+                                next_payment_date: nextPayment,
+                                last_payment_date: now,
+                                payment_status: 'pending',
+                                wifi_name: userData.wifiName,
+                                devices: userData.devices || []
+                            }
+                        ])
+                        .select()
+                        .single();
+                    
+                    if (error) {
+                        console.error('Supabase insert error:', error);
+                        console.error('Error details:', {
+                            code: error.code,
+                            message: error.message,
+                            details: error.details,
+                            hint: error.hint
+                        });
+                        throw error;
+                    }
+                    
+                    console.log('✅ Data inserted successfully:', data);
+                    return data;
+                    
+                } catch (error) {
+                    console.error('❌ Save to Supabase failed:', error);
+                    throw error;
+                }
+            }
+            
+            async sendToDiscord(formData, promoCode) {
+                if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes('your-webhook-url')) {
+                    console.warn('⚠️ Discord webhook not configured');
+                    return false;
+                }
+                
+                try {
+                    const response = await fetch(DISCORD_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "📡 নতুন রেজিস্ট্রেশন",
+                                color: 0x5865F2,
+                                fields: [
+                                    { name: "👤 নাম", value: formData.name, inline: true },
+                                    { name: "📱 ফোন", value: formData.phone, inline: true },
+                                    { name: "🎫 প্রোমো কোড", value: `\`${promoCode}\``, inline: true },
+                                    { name: "💳 পেমেন্ট", value: formData.paymentMethod.toUpperCase(), inline: true },
+                                    { name: "🔢 ট্রানজেকশন", value: formData.transactionId, inline: true },
+                                    { name: "🕒 সময়", value: new Date().toLocaleString('bn-BD'), inline: true }
+                                ],
+                                timestamp: new Date().toISOString()
+                            }]
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    console.log('✅ Sent to Discord');
+                    return true;
+                } catch (error) {
+                    console.error('❌ Discord error:', error);
+                    throw error;
+                }
+            }
+            
+            saveToLocalStorage(formData) {
+                try {
+                    const users = JSON.parse(localStorage.getItem('wifi_users_offline') || '[]');
+                    const promoCode = this.generatePromoCode(formData.phone);
+                    const userData = this.createUserData(formData, promoCode);
+                    
+                    users.push({
+                        ...userData,
+                        saved_locally: true,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    localStorage.setItem('wifi_users_offline', JSON.stringify(users));
+                    
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? '✅ অফলাইনে সেভ হয়েছে। অনলাইন হলে অটো সিঙ্ক হবে।'
+                            : '✅ Saved offline. Will sync when online.',
+                        'warning'
+                    );
+                    
+                    return userData;
+                } catch (error) {
+                    console.error('LocalStorage save error:', error);
+                }
+            }
+            
+            // ==================== USER PANEL ====================
+            
+            async handlePromoLogin(e) {
+                e.preventDefault();
+                
+                const promoCode = document.getElementById('promoCode')?.value.trim().toUpperCase();
+                
+                if (!promoCode) {
+                    this.showNotification(
+                        this.currentLang === 'bn' ? 'প্রোমো কোড দিন' : 'Enter promo code',
+                        'error'
+                    );
+                    return;
+                }
+                
+                this.showLoading();
+                
+                try {
+                    const user = await this.verifyPromoCodeInSupabase(promoCode);
+                    
+                    if (user) {
+                        const userData = {
+                            ...user,
+                            devices: typeof user.devices === 'string' ? JSON.parse(user.devices) : user.devices || []
+                        };
+                        
+                        this.loginUser(userData);
+                        this.showNotification(
+                            this.currentLang === 'bn' ? '✅ লগইন সফল!' : '✅ Login successful!',
+                            'success'
+                        );
+                    } else {
+                        this.showNotification(
+                            this.currentLang === 'bn' ? '❌ ভুল প্রোমো কোড' : '❌ Invalid promo code',
+                            'error'
+                        );
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showNotification(
+                        this.currentLang === 'bn' ? '❌ লগইনে সমস্যা' : '❌ Login error',
+                        'error'
+                    );
+                } finally {
+                    this.hideLoading();
+                }
+            }
+            
+            async verifyPromoCodeInSupabase(promoCode) {
+                try {
+                    const { data, error } = await this.supabaseClient
+                        .from('wifi_users')
+                        .select('*')
+                        .eq('promo_code', promoCode)
+                        .single();
+                    
+                    if (error || !data) {
+                        console.log('Promo code not found:', error?.message);
+                        return null;
+                    }
+                    
+                    return data;
+                } catch (error) {
+                    console.error('Verification error:', error);
+                    return null;
+                }
+            }
+            
+            loginUser(user) {
+                this.isLoggedIn = true;
+                this.currentUser = user;
+                localStorage.setItem('current_user', JSON.stringify(user));
+                this.showDashboard(user);
+            }
+            
+            async showDashboard(user) {
+                const loginForm = document.getElementById('promoLoginForm');
+                const dashboard = document.getElementById('userDashboard');
+                
+                if (loginForm) loginForm.style.display = 'none';
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                    this.populateDashboard(user);
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('userPanel')?.scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                }, 500);
+            }
+            
+            populateDashboard(user) {
+                // User Info
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userId').textContent = user.promo_code || user.promoCode;
+                
+                // Plan Info
+                document.getElementById('userPlan').textContent = 
+                    this.currentLang === 'bn' ? 'বেসিক প্ল্যান' : 'Basic Plan';
+                
+                // Device Usage
+                const usedDevices = user.devices?.length || 0;
+                const devicePercentage = Math.min((usedDevices / 1) * 100, 100);
+                document.getElementById('usedDevices').textContent = usedDevices;
+                document.getElementById('deviceProgress').style.width = `${devicePercentage}%`;
+                
+                // Payment Info
+                const regDate = new Date(user.registration_date);
+                const nextDate = new Date(user.next_payment_date);
+                
+                document.getElementById('regDate').textContent = 
+                    regDate.toLocaleDateString(this.currentLang === 'bn' ? 'bn-BD' : 'en-US');
+                document.getElementById('nextPayment').textContent = 
+                    nextDate.toLocaleDateString(this.currentLang === 'bn' ? 'bn-BD' : 'en-US');
+                
+                // Status
+                const today = new Date();
+                const status = nextDate > today ? 'active' : 'expired';
+                document.getElementById('paymentStatus').textContent = 
+                    this.currentLang === 'bn' 
+                        ? (status === 'active' ? 'একটিভ' : 'মেয়াদোত্তীর্ণ')
+                        : (status === 'active' ? 'Active' : 'Expired');
+                
+                // Connection Info
+                document.getElementById('wifiName').textContent = user.wifi_name;
+                
+                // Update device list
+                this.updateDeviceList(user.devices || []);
+            }
+            
+            updateDeviceList(devices) {
+                const deviceList = document.getElementById('deviceList');
+                
+                if (devices.length === 0) {
+                    deviceList.innerHTML = `
+                        <div class="no-devices">
+                            ${this.currentLang === 'bn' 
+                                ? 'কোনো ডিভাইস কানেক্টেড নেই' 
+                                : 'No devices connected'}
+                        </div>
+                    `;
+                    return;
+                }
+                
+                deviceList.innerHTML = devices.map(device => `
+                    <div class="device-item">
+                        <i class="fas fa-${this.getDeviceIcon(device.type)}"></i>
+                        <span>${device.name}</span>
+                        <span class="device-status active">
+                            ${this.currentLang === 'bn' ? 'কানেক্টেড' : 'Connected'}
+                        </span>
+                        <button class="btn btn-danger btn-small" onclick="window.wifiSystem.removeDevice('${device.id}')">
+                            ${this.currentLang === 'bn' ? 'রিমুভ' : 'Remove'}
+                        </button>
+                    </div>
+                `).join('');
+            }
+            
+            getDeviceIcon(type) {
+                const icons = {
+                    'mobile': 'mobile-alt',
+                    'laptop': 'laptop',
+                    'pc': 'desktop',
+                    'tablet': 'tablet-alt',
+                    'tv': 'tv'
+                };
+                return icons[type] || 'question-circle';
+            }
+            
+            // ==================== DEVICE MANAGEMENT ====================
+            
+            async handleAddDevice(e) {
+                e.preventDefault();
+                
+                const deviceName = document.getElementById('newDeviceName')?.value.trim();
+                const deviceType = document.getElementById('deviceType')?.value;
+                
+                if (!deviceName) {
+                    this.showNotification(
+                        this.currentLang === 'bn' ? 'ডিভাইসের নাম দিন' : 'Enter device name',
+                        'error'
+                    );
+                    return;
+                }
+                
+                if (!this.currentUser) return;
+                
+                if (this.currentUser.devices?.length >= 1) {
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? 'আপনি সর্বোচ্চ ১টি ডিভাইস যুক্ত করতে পারেন'
+                            : 'You can only connect 1 device',
+                        'error'
+                    );
+                    return;
+                }
+                
+                const newDevice = {
+                    id: 'DEV-' + Date.now(),
+                    name: deviceName,
+                    type: deviceType || 'mobile',
+                    added_at: new Date().toISOString(),
+                    status: 'active'
+                };
+                
+                if (!this.currentUser.devices) this.currentUser.devices = [];
+                this.currentUser.devices.push(newDevice);
+                
+                try {
+                    await this.updateUserInSupabase();
+                    this.populateDashboard(this.currentUser);
+                    this.closeModals();
+                    document.getElementById('addDeviceForm')?.reset();
+                    
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? '✅ ডিভাইস যুক্ত হয়েছে' 
+                            : '✅ Device added',
+                        'success'
+                    );
+                } catch (error) {
+                    console.error('Device add error:', error);
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? '❌ ডিভাইস যোগ করতে সমস্যা' 
+                            : '❌ Device add failed',
+                        'error'
+                    );
+                }
+            }
+            
+            async removeDevice(deviceId) {
+                if (!this.currentUser) return;
+                
+                if (!confirm(
+                    this.currentLang === 'bn' 
+                        ? 'ডিভাইস রিমুভ করবেন?'
+                        : 'Remove device?'
+                )) return;
+                
+                this.currentUser.devices = this.currentUser.devices?.filter(d => d.id !== deviceId) || [];
+                
+                try {
+                    await this.updateUserInSupabase();
+                    this.populateDashboard(this.currentUser);
+                    
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? '✅ ডিভাইস রিমুভ করা হয়েছে' 
+                            : '✅ Device removed',
+                        'success'
+                    );
+                } catch (error) {
+                    console.error('Device remove error:', error);
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? '❌ ডিভাইস রিমুভ করতে সমস্যা' 
+                            : '❌ Device remove failed',
+                        'error'
+                    );
+                }
+            }
+            
+            async updateUserInSupabase() {
+                if (!this.currentUser) return;
+                
+                try {
+                    const { data, error } = await this.supabaseClient
+                        .from('wifi_users')
+                        .update({
+                            devices: this.currentUser.devices || []
+                        })
+                        .eq('promo_code', this.currentUser.promo_code || this.currentUser.promoCode);
+                    
+                    if (error) throw error;
+                    console.log('✅ User updated in Supabase');
+                } catch (error) {
+                    console.error('❌ Supabase update error:', error);
+                    throw error;
+                }
+            }
+            
+            // ==================== UTILITIES ====================
+            
+            handleLogout() {
+                if (confirm(
+                    this.currentLang === 'bn' 
+                        ? 'লগআউট করবেন?'
+                        : 'Logout?'
+                )) {
+                    localStorage.removeItem('current_user');
+                    this.isLoggedIn = false;
+                    this.currentUser = null;
+                    
+                    const loginForm = document.getElementById('promoLoginForm');
+                    const dashboard = document.getElementById('userDashboard');
+                    
+                    if (loginForm) loginForm.style.display = 'block';
+                    if (dashboard) dashboard.style.display = 'none';
+                    
+                    document.getElementById('promoCode').value = '';
+                    
+                    this.showNotification(
+                        this.currentLang === 'bn' 
+                            ? '✅ লগআউট সম্পন্ন'
+                            : '✅ Logged out',
+                        'success'
+                    );
+                }
+            }
+            
+            showRegistrationSuccess(userData) {
+                const message = this.currentLang === 'bn' 
+                    ? `
+                        <div style="text-align: center;">
+                            <h3 style="color: #10b981; margin-bottom: 1.5rem;">
+                                <i class="fas fa-check-circle"></i> রেজিস্ট্রেশন সফল!
+                            </h3>
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                 color: white; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+                                <strong style="font-size: 1.1rem;">প্রোমো কোড:</strong>
+                                <div style="font-family: 'Courier New', monospace; font-size: 1.8rem; 
+                                     font-weight: bold; letter-spacing: 2px; background: rgba(255,255,255,0.15); 
+                                     padding: 0.75rem; border-radius: 8px; margin: 0.75rem 0; 
+                                     border: 2px dashed rgba(255,255,255,0.3);">
+                                    ${userData.promoCode}
+                                </div>
+                                <small>ইউজার প্যানেলে লগইন করতে এই কোডটি ব্যবহার করুন</small>
+                            </div>
+                            <p>আমরা আপনার পেমেন্ট ভেরিফাই করে WhatsApp/ইমেইলে WiFi পাসওয়ার্ড পাঠাবো।</p>
+                        </div>
+                    `
+                    : `
+                        <div style="text-align: center;">
+                            <h3 style="color: #10b981; margin-bottom: 1.5rem;">
+                                <i class="fas fa-check-circle"></i> Registration Successful!
+                            </h3>
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                 color: white; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+                                <strong style="font-size: 1.1rem;">Promo Code:</strong>
+                                <div style="font-family: 'Courier New', monospace; font-size: 1.8rem; 
+                                     font-weight: bold; letter-spacing: 2px; background: rgba(255,255,255,0.15); 
+                                     padding: 0.75rem; border-radius: 8px; margin: 0.75rem 0; 
+                                     border: 2px dashed rgba(255,255,255,0.3);">
+                                    ${userData.promoCode}
+                                </div>
+                                <small>Use this code to login to User Panel</small>
+                            </div>
+                            <p>We will verify your payment and send WiFi password via WhatsApp/Email.</p>
+                        </div>
+                    `;
+                
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.display = 'flex';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 500px;">
+                        ${message}
+                        <div style="margin-top: 25px; display: flex; gap: 10px; justify-content: center;">
+                            <button class="btn btn-primary" onclick="this.closest('.modal').remove()">
+                                ${this.currentLang === 'bn' ? 'ঠিক আছে' : 'OK'}
+                            </button>
+                            <button class="btn btn-secondary" onclick="window.wifiSystem.goToUserPanel(); this.closest('.modal').remove()">
+                                <i class="fas fa-user-circle"></i>
+                                ${this.currentLang === 'bn' ? 'ইউজার প্যানেলে যান' : 'Go to User Panel'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            }
+            
+            goToUserPanel() {
+                this.closeAllModals();
+                document.getElementById('userPanel')?.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            showAddDeviceModal() {
+                document.getElementById('addDeviceModal').style.display = 'flex';
+            }
+            
+            closeModals() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            closeAllModals() {
+                this.closeModals();
+            }
+            
+            showLoading() {
+                document.getElementById('loading').style.display = 'flex';
+            }
+            
+            hideLoading() {
+                document.getElementById('loading').style.display = 'none';
+            }
+            
+            showNotification(message, type = 'info') {
+                document.querySelectorAll('.notification').forEach(n => n.remove());
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                
+                const icon = {
+                    'success': 'fa-check-circle',
+                    'error': 'fa-times-circle',
+                    'warning': 'fa-exclamation-triangle',
+                    'info': 'fa-info-circle'
+                }[type] || 'fa-info-circle';
+                
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <i class="fas ${icon}"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button class="notification-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                notification.querySelector('.notification-close').addEventListener('click', () => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                });
+                
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.style.animation = 'slideOut 0.3s ease';
+                        setTimeout(() => notification.remove(), 300);
+                    }
+                }, 5000);
+            }
+            
+            getLoggedInUser() {
+                const userData = localStorage.getItem('current_user');
+                return userData ? JSON.parse(userData) : null;
+            }
+            
+            scrollToForm() {
+                document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            highlightSelectedMethod(method) {
+                document.querySelectorAll('.method').forEach(m => {
+                    m.classList.remove('selected');
+                });
+                
+                const selectedMethod = document.querySelector(`[data-method="${method}"]`);
+                if (selectedMethod) {
+                    selectedMethod.classList.add('selected');
+                }
+            }
+            
+            copyToClipboard(elementId) {
+                const element = document.getElementById(elementId);
+                if (!element) return;
+                
+                navigator.clipboard.writeText(element.textContent).then(() => {
+                    this.showNotification(
+                        this.currentLang === 'bn' ? '📋 কপি করা হয়েছে' : '📋 Copied to clipboard',
+                        'success'
+                    );
+                });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 DOM fully loaded');
+            
+            try {
+                window.wifiSystem = new WiFiBillingSystem();
+                window.wifiSystem.init();
+                console.log('🎉 WiFi System initialized successfully!');
+            } catch (error) {
+                console.error('💥 Error initializing WiFi System:', error);
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    background: #e63946;
+                    color: white;
+                    padding: 1rem;
+                    text-align: center;
+                    z-index: 9999;
+                    font-family: sans-serif;
+                    font-weight: bold;
+                `;
+                errorDiv.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    System initialization failed. Please check console (F12) for errors.
+                `;
+                document.body.appendChild(errorDiv);
+            }
+        });
+
+        // Global helper functions
+        function copyToClipboard(elementId) {
+            window.wifiSystem?.copyToClipboard(elementId);
+        }
+    </script>
 </body>
 </html>
